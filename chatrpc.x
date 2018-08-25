@@ -1,4 +1,4 @@
-enum STATUS {ONLINE = 0, OFFLINE};
+enum STATUS {OFFLINE = 0, ONLINE};
 
 struct usuario {
   char login[10];
