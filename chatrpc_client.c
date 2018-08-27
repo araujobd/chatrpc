@@ -3,9 +3,10 @@
 #include "chatrpc.h"
 
 int conectar(CLIENT **,char *,usuario **);
-void desconectar(CLIENT **, usuario **, int);
+int desconectar(CLIENT **, usuario **, int);
 void falar(CLIENT *, int);
 void ler_mensagens(CLIENT *);
+char * status_string(STATUS status);
 
 int main(int argc, char *argv[])
 {
@@ -21,10 +22,11 @@ int main(int argc, char *argv[])
 
   userid = conectar(&client, argv[1], &user);
   falar(client, userid);
+
   printf("\n=====Mensagens=====\n");
   ler_mensagens(client);
 
-  return 0;
+  return desconectar(&client, &user, userid);
 }
 
 int conectar(CLIENT **client, char *host, usuario **user)
@@ -37,14 +39,18 @@ int conectar(CLIENT **client, char *host, usuario **user)
   return *conectar_1(*user, *client);
 }
 
-void desconectar(CLIENT **client, usuario **user, int userid)
+int desconectar(CLIENT **client, usuario **user, int userid)
 {
   int result = 0;
   result = *desconectar_1(&userid, *client);
+
   if(result != 0)
     printf("Erro ao desconectar\n");
+
   free(*client);
   free(*user);
+
+  return result;
 }
 
 void falar(CLIENT *client, int userid)
@@ -61,8 +67,8 @@ void falar(CLIENT *client, int userid)
 
 void ler_mensagens(CLIENT *client)
 {
-  msg mensagem;
-  usuario user;
+  msg *mensagem;
+  usuario *user;
   int i;
   int mensagens = 0;
   void *p;
@@ -70,8 +76,16 @@ void ler_mensagens(CLIENT *client)
 
   for(i=0; i<mensagens; i++)
   {
-    mensagem = *get_msg_1(&i, client);
-    user = *get_usuario_1(&(mensagem.userid), client);
-    printf("%s: %s\n", user.login, mensagem.text);
+    mensagem = get_msg_1(&i, client);
+    user = get_usuario_1(&(mensagem->userid), client);
+    printf("%s (%s): %s\n", user->login, status_string(user->status), mensagem->text);
   }
+}
+
+char * status_string(STATUS status)
+{
+  if (status == ONLINE)
+    return "ONLINE";
+  else
+    return "OFFLINE";
 }

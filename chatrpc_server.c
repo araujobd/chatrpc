@@ -74,7 +74,7 @@ usuario * get_usuario_1_svc(int *userid, struct svc_req *rqstp)
 int * falar_1_svc(msg *m, struct svc_req *rqstp)
 {
   static int result;
-  printf("falar -> %d: %s\n", m->userid, m->text);
+
   if(tamanhoMsgs < MAXIMOMSGS)
   {
     mensagens[tamanhoMsgs] = *m;
