@@ -1,5 +1,4 @@
 *.o
-Makefile
 chatrpc.h
 chatrpc_clnt.c
 chatrpc_svc.c
