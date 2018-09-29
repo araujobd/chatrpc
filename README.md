@@ -1,3 +1,7 @@
+# Sobre
+
+Projeto de implementação de um chat RPC para a disciplina de Sistemas distribuídos
+
 # Instruções
 
 Para criar o makefile rode:
